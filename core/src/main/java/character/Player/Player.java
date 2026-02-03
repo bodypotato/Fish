@@ -1,16 +1,21 @@
 package character.Player;
 
 import character.ICharacter;
-import com.Control.Control;
-import com.Control.Global;
+import com.Control.Global.BaseTool;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 
 public class Player implements ICharacter {
+    //初始大小和位置
+    private static final float PLAYER_WIDTH = BaseTool.getInstance().gameViewport.getWorldWidth()/5;
+    private static final float PLAYER_HEIGHT = BaseTool.getInstance().gameViewport.getWorldHeight()/5;
+    private static final float INIT_X =BaseTool.getInstance().gameViewport.getWorldWidth()/2;
+    private static final float INIT_Y =BaseTool.getInstance().gameViewport.getWorldHeight()/2;
+
+    //属性
     private Sprite playerSprite;
     private PlayerAnimation playerAnimation;
     private int HP;
@@ -19,12 +24,13 @@ public class Player implements ICharacter {
     private float p;//密度
     private float speed;
     private Vector2 position;
+    float aniSpeed = 0;
     public Player() {
         playerAnimation = new PlayerAnimation();
-        playerSprite = new Sprite(playerAnimation.texture);
+        playerSprite = new Sprite(playerAnimation.rightAni.getKeyFrame(0));
         initProperty();
-        initSize(Global.gameViewport.getWorldWidth()/5, Global.gameViewport.getWorldHeight()/5);
-        initPosition(Global.gameViewport.getWorldWidth()/2, Global.gameViewport.getWorldHeight()/2);
+        initSize(PLAYER_WIDTH,PLAYER_HEIGHT);
+        initPosition(INIT_X,INIT_Y);
     }
 
     @Override
@@ -66,19 +72,28 @@ public class Player implements ICharacter {
     }
 
     public void move(float delta){
+        aniSpeed+=delta;
         if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
+            playerSprite.setRotation(playerSprite.getRotation());
             playerSprite.translateY(speed*delta);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+            playerSprite.setRotation(playerSprite.getRotation());
             playerSprite.translateY(-speed*delta);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+            playerSprite.setRegion(playerAnimation.leftAni.getKeyFrame(aniSpeed));
             playerSprite.translateX(-speed*delta);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+            playerSprite.setRegion(playerAnimation.rightAni.getKeyFrame(aniSpeed));
             playerSprite.translateX(speed*delta);
         }
         position.set(playerSprite.getX(), playerSprite.getY());
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            playerSprite.setAlpha(0.5f);
+        }
     }
 
     public void draw(Batch batch) {

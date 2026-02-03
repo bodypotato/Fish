@@ -2,7 +2,8 @@ package com.Screen.MainGame.Prologue_Level;
 
 import character.Player.Player;
 import com.Control.Control;
-import com.Control.Global;
+import com.Control.Global.BaseTool;
+import com.Control.Global.AtlasPath;
 import com.Screen.My_GUI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -31,20 +32,12 @@ public class FishFarm implements Screen, My_GUI {
 
     @Override
     public void loadAssets() {
-        try {
-            Global.assetManager.load("Screen/MainGame/Prologue_Level/fishFarm.png", Texture.class);
-            Global.assetManager.finishLoading();
-            Gdx.app.log("FishFarm","loadAssets finish");
-        } catch (Exception e) {
-            Gdx.app.log("FishFarm", "Error loading assets");
-            Gdx.app.exit();
-        }
-
+        BaseTool.getInstance().assetManagerLoad(AtlasPath.FISH_FARM, Texture.class);
     }
 
     @Override
     public void initUI() {
-        background = Global.assetManager.get("Screen/MainGame/Prologue_Level/fishFarm.png", Texture.class);
+        background = BaseTool.getInstance().assetManagerGet(AtlasPath.FISH_FARM, Texture.class);
     }
 
     public void loadData(){
@@ -60,7 +53,7 @@ public class FishFarm implements Screen, My_GUI {
     @Override
     public void render(float delta) {
         input(delta);
-        Global.gameCamera.correctCamera(player);//镜头跟随人物
+        BaseTool.getInstance().gameCamera.correctCamera(player);//镜头跟随人物
         draw();
     }
 
@@ -80,17 +73,17 @@ public class FishFarm implements Screen, My_GUI {
     @Override
     public void draw() {
         ScreenUtils.clear(Color.BLACK);
-        Global.gameViewport.apply();
-        Global.batch.setProjectionMatrix(Global.gameCamera.getCamera().combined);
-        Global.batch.begin();
-        Global.batch.draw(background, 0, 0, Global.gameViewport.getWorldWidth(), Global.gameViewport.getWorldHeight());
-        player.draw(Global.batch);
-        Global.batch.end();
+        BaseTool.getInstance().gameViewport.apply();
+        BaseTool.getInstance().batch.setProjectionMatrix(BaseTool.getInstance().gameCamera.getCamera().combined);
+        BaseTool.getInstance().batch.begin();
+        BaseTool.getInstance().batch.draw(background, 0, 0, BaseTool.getInstance().gameViewport.getWorldWidth(), BaseTool.getInstance().gameViewport.getWorldHeight());
+        player.draw(BaseTool.getInstance().batch);
+        BaseTool.getInstance().batch.end();
     }
 
     @Override
     public void resize(int width, int height) {
-        Global.gameViewport.update(width, height);
+        BaseTool.getInstance().gameViewport.update(width, height);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.MyCamera;
 
 import character.ICharacter;
-import com.Control.Global;
+import com.Control.Global.BaseTool;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -30,10 +30,10 @@ public class UiCamera implements ICamera{
         float centerY = sprite.getY() + sprite.getHeight() / 2;
         camera.position.set(centerX,centerY , 0);
         camera.update();
-        left = centerX - Global.uiViewport.getWorldWidth()/2;
-        right = centerX + Global.uiViewport.getWorldWidth()/2;
-        top = centerY + Global.uiViewport.getWorldHeight()/2;
-        bottom = centerY - Global.uiViewport.getWorldHeight()/2;
+        left = centerX - BaseTool.getInstance().uiViewport.getWorldWidth()/2;
+        right = centerX + BaseTool.getInstance().uiViewport.getWorldWidth()/2;
+        top = centerY + BaseTool.getInstance().uiViewport.getWorldHeight()/2;
+        bottom = centerY - BaseTool.getInstance().uiViewport.getWorldHeight()/2;
     }
     public void restrictCamera(Sprite sprite) {
     }

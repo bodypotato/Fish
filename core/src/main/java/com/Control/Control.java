@@ -1,25 +1,13 @@
 package com.Control;
 
-import com.MyCamera.UiCamera;
+import com.Control.Global.BaseTool;
+import com.Control.Global.LoadGlobalAsset;
+import com.Control.Global.MyAtlas;
 import com.Screen.Choose.Choose;
 import com.Screen.Start.Start;
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 public class Control extends Game {
@@ -36,21 +24,24 @@ public class Control extends Game {
 
     @Override
     public void create() {
+        BaseTool.getInstance();
+        MyAtlas.getInstance();
+        LoadGlobalAsset.load();
         // 初始化单例
         instance = this;
         //初始化必要的Screen
-        Global.startScreen = new Start(this);
-        Global.chooseScreen = new Choose(this);
+        BaseTool.getInstance().startScreen = new Start(this);
+        BaseTool.getInstance().chooseScreen = new Choose(this);
         goToStartScreen();
 
         Gdx.app.log("Control", "游戏初始化完成，已进入开始界面");
     }
 
     public void goToStartScreen(){
-        setScreen(Global.startScreen);
+        setScreen(BaseTool.getInstance().startScreen);
     }
     public void goToChooseScreen(){
-        setScreen(Global.chooseScreen);
+        setScreen(BaseTool.getInstance().chooseScreen);
     }
     public void goToVictoryEndScreen(){
 
@@ -60,13 +51,13 @@ public class Control extends Game {
     }
     @Override
     public void render() {
-        Global.gameTime += Gdx.graphics.getDeltaTime();
+        BaseTool.getInstance().gameTime += Gdx.graphics.getDeltaTime();
         super.render();
     }
 
     @Override
     public void resize(int width, int height) {
-        Global.uiViewport.update(width, height,true); // 视口更新会自动更新相机
+        BaseTool.getInstance().uiViewport.update(width, height,true); // 视口更新会自动更新相机
         super.resize(width, height);
     }
 
