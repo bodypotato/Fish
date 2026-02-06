@@ -24,7 +24,10 @@ public class Player implements ICharacter {
     private float p;//密度
     private float speed;
     private Vector2 position;
-    float aniSpeed = 0;
+
+    //动画播放
+    float aniTime = 0;
+
     public Player() {
         playerAnimation = new PlayerAnimation();
         playerSprite = new Sprite(playerAnimation.rightAni.getKeyFrame(0));
@@ -72,28 +75,29 @@ public class Player implements ICharacter {
     }
 
     public void move(float delta){
-        aniSpeed+=delta;
+        aniTime+=delta;
+        playerAnimation.dirJudge();
+        //移动
         if(Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)){
-            playerSprite.setRotation(playerSprite.getRotation());
             playerSprite.translateY(speed*delta);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            playerSprite.setRotation(playerSprite.getRotation());
             playerSprite.translateY(-speed*delta);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-            playerSprite.setRegion(playerAnimation.leftAni.getKeyFrame(aniSpeed));
+            playerAnimation.aniPlay(playerAnimation.getDir(),playerSprite,aniTime);
             playerSprite.translateX(-speed*delta);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            playerSprite.setRegion(playerAnimation.rightAni.getKeyFrame(aniSpeed));
+            playerAnimation.aniPlay(playerAnimation.getDir(),playerSprite,aniTime);
             playerSprite.translateX(speed*delta);
         }
-        position.set(playerSprite.getX(), playerSprite.getY());
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-            playerSprite.setAlpha(0.5f);
-        }
+
+        position.set(playerSprite.getX(), playerSprite.getY());
+//        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+//            playerSprite.setAlpha(0.5f);
+//        }
     }
 
     public void draw(Batch batch) {
