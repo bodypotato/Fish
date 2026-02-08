@@ -1,6 +1,7 @@
 package com.Control;
 
-import com.Control.Global.BaseTool;
+import com.Control.Global.AllToolsInit;
+import com.Control.Global.BaseTools;
 import com.Control.Global.LoadGlobalAsset;
 import com.Control.Global.MyAtlas;
 import com.Screen.Choose.Choose;
@@ -24,24 +25,23 @@ public class Control extends Game {
 
     @Override
     public void create() {
-        BaseTool.getInstance();
-        MyAtlas.getInstance();
+        AllToolsInit.init();
         LoadGlobalAsset.load();
         // 初始化单例
         instance = this;
         //初始化必要的Screen
-        BaseTool.getInstance().startScreen = new Start(this);
-        BaseTool.getInstance().chooseScreen = new Choose(this);
+        BaseTools.getInstance().startScreen = new Start(this);
+        BaseTools.getInstance().chooseScreen = new Choose(this);
         goToStartScreen();
 
         Gdx.app.log("Control", "游戏初始化完成，已进入开始界面");
     }
 
     public void goToStartScreen(){
-        setScreen(BaseTool.getInstance().startScreen);
+        setScreen(BaseTools.getInstance().startScreen);
     }
     public void goToChooseScreen(){
-        setScreen(BaseTool.getInstance().chooseScreen);
+        setScreen(BaseTools.getInstance().chooseScreen);
     }
     public void goToVictoryEndScreen(){
 
@@ -51,13 +51,13 @@ public class Control extends Game {
     }
     @Override
     public void render() {
-        BaseTool.getInstance().gameTime += Gdx.graphics.getDeltaTime();
+        BaseTools.getInstance().gameTime += Gdx.graphics.getDeltaTime();
         super.render();
     }
 
     @Override
     public void resize(int width, int height) {
-        BaseTool.getInstance().uiViewport.update(width, height,true); // 视口更新会自动更新相机
+        BaseTools.getInstance().uiViewport.update(width, height,true); // 视口更新会自动更新相机
         super.resize(width, height);
     }
 

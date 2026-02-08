@@ -2,21 +2,31 @@ package com.Screen.MainGame.Prologue_Level;
 
 import character.Player.Player;
 import com.Control.Control;
-import com.Control.Global.BaseTool;
-import com.Control.Global.AtlasPath;
+import com.Control.Global.AllPath;
+import com.Control.Global.BaseTools;
+import com.Control.Global.MyMapManager;
 import com.Screen.My_GUI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapProperties;
+import com.badlogic.gdx.maps.MapRenderer;
+import com.badlogic.gdx.maps.tiled.*;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.ScreenUtils;
 import save.Manager.PlayerHandler;
 
 
 public class FishFarm implements Screen, My_GUI {
     final Control control;
-    Texture background;
+    TiledMap map;
     Player player;
     public FishFarm(Control control) {
         this.control = control;
@@ -32,12 +42,14 @@ public class FishFarm implements Screen, My_GUI {
 
     @Override
     public void loadAssets() {
-        BaseTool.getInstance().assetManagerLoad(AtlasPath.FISH_FARM, Texture.class);
+        BaseTools.getInstance().assetManagerLoad(AllPath.FISH_FARM_Background, TiledMap.class);
+        map = BaseTools.getInstance().assetManagerGet(AllPath.FISH_FARM_Background, TiledMap.class);
+        MyMapManager.currentMapRenderer = new OrthogonalTiledMapRenderer(map,1f,BaseTools.getInstance().batch);
     }
 
     @Override
     public void initUI() {
-        background = BaseTool.getInstance().assetManagerGet(AtlasPath.FISH_FARM, Texture.class);
+
     }
 
     public void loadData(){
@@ -53,7 +65,7 @@ public class FishFarm implements Screen, My_GUI {
     @Override
     public void render(float delta) {
         input(delta);
-        BaseTool.getInstance().gameCamera.correctCamera(player);//镜头跟随人物
+        BaseTools.getInstance().gameCamera.correctCamera(player);//镜头跟随人物
         draw();
     }
 
@@ -73,17 +85,19 @@ public class FishFarm implements Screen, My_GUI {
     @Override
     public void draw() {
         ScreenUtils.clear(Color.BLACK);
-        BaseTool.getInstance().gameViewport.apply();
-        BaseTool.getInstance().batch.setProjectionMatrix(BaseTool.getInstance().gameCamera.getCamera().combined);
-        BaseTool.getInstance().batch.begin();
-        BaseTool.getInstance().batch.draw(background, 0, 0, BaseTool.getInstance().gameViewport.getWorldWidth(), BaseTool.getInstance().gameViewport.getWorldHeight());
-        player.draw(BaseTool.getInstance().batch);
-        BaseTool.getInstance().batch.end();
+        MyMapManager.currentMapRenderer.setView(BaseTools.getInstance().gameCamera.getCamera());
+        MyMapManager.currentMapRenderer.render();
+        BaseTools.getInstance().gameViewport.apply();
+        BaseTools.getInstance().batch.setProjectionMatrix(BaseTools.getInstance().gameCamera.getCamera().combined);
+        BaseTools.getInstance().batch.begin();
+
+        player.draw(BaseTools.getInstance().batch);
+        BaseTools.getInstance().batch.end();
     }
 
     @Override
     public void resize(int width, int height) {
-        BaseTool.getInstance().gameViewport.update(width, height);
+        BaseTools.getInstance().gameViewport.update(width, height);
     }
 
     @Override

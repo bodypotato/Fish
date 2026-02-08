@@ -1,8 +1,8 @@
 package com.Screen.Choose;
 
 import com.Control.Control;
-import com.Control.Global.BaseTool;
-import com.Control.Global.AtlasPath;
+import com.Control.Global.BaseTools;
+import com.Control.Global.AllPath;
 import com.Screen.MainGame.Prologue_Level.FishFarm;
 import com.Screen.My_GUI;
 import com.badlogic.gdx.Gdx;
@@ -27,12 +27,12 @@ public class Choose implements Screen, My_GUI {
 
     @Override
     public void loadAssets() {
-        BaseTool.getInstance().assetManagerLoad(AtlasPath.CHOOSE_BACKGROUND, Texture.class);
+        BaseTools.getInstance().assetManagerLoad(AllPath.CHOOSE_BACKGROUND, Texture.class);
     }
 
     @Override
     public void initUI() {
-        background = BaseTool.getInstance().assetManagerGet(AtlasPath.CHOOSE_BACKGROUND, Texture.class);
+        background = BaseTools.getInstance().assetManagerGet(AllPath.CHOOSE_BACKGROUND, Texture.class);
     }
 
 
@@ -53,11 +53,11 @@ public class Choose implements Screen, My_GUI {
     @Override
     public void draw(){
         ScreenUtils.clear(Color.BLACK);
-        BaseTool.getInstance().uiViewport.apply();
-        BaseTool.getInstance().batch.setProjectionMatrix(BaseTool.getInstance().uiCamera.getCamera().combined);
-        BaseTool.getInstance().batch.begin();
-        BaseTool.getInstance().batch.draw(background,0,0, BaseTool.getInstance().uiViewport.getWorldWidth(), BaseTool.getInstance().uiViewport.getWorldHeight());
-        BaseTool.getInstance().batch.end();
+        BaseTools.getInstance().uiViewport.apply();
+        BaseTools.getInstance().batch.setProjectionMatrix(BaseTools.getInstance().uiCamera.getCamera().combined);
+        BaseTools.getInstance().batch.begin();
+        BaseTools.getInstance().batch.draw(background,0,0, BaseTools.getInstance().uiViewport.getWorldWidth(), BaseTools.getInstance().uiViewport.getWorldHeight());
+        BaseTools.getInstance().batch.end();
     }
 
     public void goToFishFarm(){

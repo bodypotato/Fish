@@ -12,13 +12,13 @@ public class LoadGlobalAsset {
     }
     // ===================== 预加载所有全局通用资源=====================
     private static void assetManagerLoad() {
-        BaseTool.getInstance().assetManagerLoad(AtlasPath.BUTTON_BEGIN,Texture.class);
-        BaseTool.getInstance().assetManagerLoad(AtlasPath.BUTTON_EXIT,Texture.class);
-        BaseTool.getInstance().assetManagerLoad(AtlasPath.PLAYER_ATLAS, TextureAtlas.class);
+        BaseTools.getInstance().assetManagerLoad(AllPath.BUTTON_BEGIN,Texture.class);
+        BaseTools.getInstance().assetManagerLoad(AllPath.BUTTON_EXIT,Texture.class);
+        BaseTools.getInstance().assetManagerLoad(AllPath.PLAYER_ATLAS, TextureAtlas.class);
     }
 
     private static void atlasGet(){
-        MyAtlas.getInstance().playerAtlas = BaseTool.getInstance().assetManagerGet(AtlasPath.PLAYER_ATLAS, TextureAtlas.class);
+        MyAtlas.getInstance().playerAtlas = BaseTools.getInstance().assetManagerGet(AllPath.PLAYER_ATLAS, TextureAtlas.class);
     }
 
 

@@ -6,22 +6,24 @@ import com.Screen.Choose.Choose;
 import com.Screen.Start.Start;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.maps.tiled.AtlasTmxMapLoader;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 // 严格懒汉式单例（线程安全，适配游戏多线程场景）
-public class BaseTool {
+public class BaseTools {
     //  私有静态实例（唯一实例）
-    private static volatile BaseTool INSTANCE;
+    private static volatile BaseTools INSTANCE;
 
     //  私有构造器（禁止外部new）
-    private BaseTool() {}
+    private BaseTools() {}
 
     // 实例成员
     //--全局Screen
@@ -39,17 +41,18 @@ public class BaseTool {
     public float gameTime;
 
     // 游戏常量（仍为static final，不可修改，无封装风险）
-    public static final int LOGICAL_WIDTH = 1600;
-    public static final int LOGICAL_HEIGHT = 900;
+    public static final int LOGICAL_WIDTH = 80;
+    public static final int LOGICAL_HEIGHT = 60;
     public static final float FONT_SCALE = 2.0f;
 
     // 4. 公共静态getInstance（双重校验锁，线程安全+懒加载）
-    public static BaseTool getInstance() {
+    public static BaseTools getInstance() {
         if (INSTANCE == null) {
-            synchronized (BaseTool.class) {
+            synchronized (BaseTools.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new BaseTool();
+                    INSTANCE = new BaseTools();
                     INSTANCE.init(); // 实例创建时自动初始化，无需手动调用init()
+                    INSTANCE.assetManagerSetLoader(TiledMap.class, new AtlasTmxMapLoader(new InternalFileHandleResolver()));
                 }
             }
         }
@@ -74,8 +77,7 @@ public class BaseTool {
         font.getData().setScale(FONT_SCALE);
     }
 
-    //==================getter=========================
-
+    //assetManager
     public <T> T assetManagerGet(String path, Class<T> type) {
         if (path == null || type == null || !assetManager.isLoaded(path, type)) {
             Gdx.app.error(type == null ? "BaseTool" : type.getSimpleName(), "资源未加载：" + path);
@@ -84,8 +86,6 @@ public class BaseTool {
         return assetManager.get(path, type);
     }
 
-
-    // ===============setter========================
     public <T> void assetManagerLoad(String path, Class<T> type) {
         // 1. 前置参数校验：提前拦截非法值，开发阶段就报错
         if (path == null || path.trim().isEmpty()) {
@@ -113,4 +113,26 @@ public class BaseTool {
             Gdx.app.exit(); // 核心资源加载失败，退出应用
         }
     }
+
+    public <T> void assetManagerSetLoader(Class<T> type, AssetLoader<T, ?> loader) {
+        // 1. 参数校验：拦截空值，提前暴露问题
+        if (type == null) {
+            Gdx.app.error("BaseAssets", "设置加载器失败：资源类型不能为空！");
+            return;
+        }
+        if (loader == null) {
+            Gdx.app.error("BaseAssets", "设置加载器失败：加载器实例不能为空！");
+            return;
+        }
+        // 2. 执行加载器设置，并打印日志
+        try {
+            assetManager.setLoader(type, loader);
+            Gdx.app.log("BaseAssets", "加载器设置成功：" + type.getSimpleName());
+        } catch (Exception e) {
+            Gdx.app.error("BaseAssets", "设置加载器失败：" + type.getSimpleName(), e);
+            Gdx.app.exit();
+        }
+    }
+
+
 }

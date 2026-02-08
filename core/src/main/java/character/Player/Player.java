@@ -1,7 +1,7 @@
 package character.Player;
 
 import character.ICharacter;
-import com.Control.Global.BaseTool;
+import com.Control.Global.BaseTools;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -10,10 +10,10 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Player implements ICharacter {
     //初始大小和位置
-    private static final float PLAYER_WIDTH = BaseTool.getInstance().gameViewport.getWorldWidth()/5;
-    private static final float PLAYER_HEIGHT = BaseTool.getInstance().gameViewport.getWorldHeight()/5;
-    private static final float INIT_X =BaseTool.getInstance().gameViewport.getWorldWidth()/2;
-    private static final float INIT_Y =BaseTool.getInstance().gameViewport.getWorldHeight()/2;
+    private static final float PLAYER_WIDTH = BaseTools.getInstance().gameViewport.getWorldWidth()/5;
+    private static final float PLAYER_HEIGHT = BaseTools.getInstance().gameViewport.getWorldHeight()/5;
+    private static final float INIT_X = BaseTools.getInstance().gameViewport.getWorldWidth()/2;
+    private static final float INIT_Y = BaseTools.getInstance().gameViewport.getWorldHeight()/2;
 
     //属性
     private Sprite playerSprite;

@@ -1,8 +1,8 @@
 package com.Screen.Start;
 
 import com.Control.Control;
-import com.Control.Global.BaseTool;
-import com.Control.Global.AtlasPath;
+import com.Control.Global.BaseTools;
+import com.Control.Global.AllPath;
 import com.Screen.My_GUI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -35,15 +35,15 @@ public class Start implements Screen , My_GUI {
 
     @Override
     public void loadAssets() {
-        BaseTool.getInstance().assetManagerLoad(AtlasPath.START_BACKGROUND, Texture.class);
+        BaseTools.getInstance().assetManagerLoad(AllPath.START_BACKGROUND, Texture.class);
     }
     @Override
     public void initUI(){
-        background = BaseTool.getInstance().assetManagerGet(AtlasPath.START_BACKGROUND, Texture.class);
-        begin = new Sprite(BaseTool.getInstance().assetManagerGet(AtlasPath.BUTTON_BEGIN, Texture.class));
-        exit = new Sprite(BaseTool.getInstance().assetManagerGet(AtlasPath.BUTTON_EXIT, Texture.class));
-        begin.setSize(BaseTool.getInstance().uiViewport.getWorldWidth()/5, BaseTool.getInstance().uiViewport.getWorldHeight()/5);
-        exit.setSize(BaseTool.getInstance().uiViewport.getWorldWidth()/5, BaseTool.getInstance().uiViewport.getWorldHeight()/5);
+        background = BaseTools.getInstance().assetManagerGet(AllPath.START_BACKGROUND, Texture.class);
+        begin = new Sprite(BaseTools.getInstance().assetManagerGet(AllPath.BUTTON_BEGIN, Texture.class));
+        exit = new Sprite(BaseTools.getInstance().assetManagerGet(AllPath.BUTTON_EXIT, Texture.class));
+        begin.setSize(BaseTools.getInstance().uiViewport.getWorldWidth()/5, BaseTools.getInstance().uiViewport.getWorldHeight()/5);
+        exit.setSize(BaseTools.getInstance().uiViewport.getWorldWidth()/5, BaseTools.getInstance().uiViewport.getWorldHeight()/5);
         beginRect = new Rectangle();
         exitRect = new Rectangle();
         touchPos = new Vector2();
@@ -52,8 +52,8 @@ public class Start implements Screen , My_GUI {
     @Override
     public void render(float delta) {
         //随视口变大变小实时更新位置
-        begin.setCenter(BaseTool.getInstance().uiViewport.getWorldWidth()/2-begin.getWidth(), BaseTool.getInstance().uiViewport.getWorldHeight()/2);
-        exit.setCenter(BaseTool.getInstance().uiViewport.getWorldWidth()/2+begin.getWidth(), BaseTool.getInstance().uiViewport.getWorldHeight()/2);
+        begin.setCenter(BaseTools.getInstance().uiViewport.getWorldWidth()/2-begin.getWidth(), BaseTools.getInstance().uiViewport.getWorldHeight()/2);
+        exit.setCenter(BaseTools.getInstance().uiViewport.getWorldWidth()/2+begin.getWidth(), BaseTools.getInstance().uiViewport.getWorldHeight()/2);
         input(delta);
         draw();
     }
@@ -64,7 +64,7 @@ public class Start implements Screen , My_GUI {
         exitRect.set(exit.getX(), exit.getY(), exit.getWidth(), exit.getHeight());
         if(Gdx.input.isTouched()){
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
-            BaseTool.getInstance().uiViewport.unproject(touchPos);
+            BaseTools.getInstance().uiViewport.unproject(touchPos);
             if(beginRect.contains(touchPos)){
                 control.goToChooseScreen();
             }
@@ -78,18 +78,18 @@ public class Start implements Screen , My_GUI {
     @Override
     public void draw(){
         ScreenUtils.clear(Color.BLACK);
-        BaseTool.getInstance().uiViewport.apply();
-        BaseTool.getInstance().batch.setProjectionMatrix(BaseTool.getInstance().uiCamera.getCamera().combined);
-        BaseTool.getInstance().batch.begin();
-        BaseTool.getInstance().batch.draw(background,0,0, BaseTool.getInstance().uiViewport.getWorldWidth(), BaseTool.getInstance().uiViewport.getWorldHeight());
-        begin.draw(BaseTool.getInstance().batch);
-        exit.draw(BaseTool.getInstance().batch);
-        BaseTool.getInstance().batch.end();
+        BaseTools.getInstance().uiViewport.apply();
+        BaseTools.getInstance().batch.setProjectionMatrix(BaseTools.getInstance().uiCamera.getCamera().combined);
+        BaseTools.getInstance().batch.begin();
+        BaseTools.getInstance().batch.draw(background,0,0, BaseTools.getInstance().uiViewport.getWorldWidth(), BaseTools.getInstance().uiViewport.getWorldHeight());
+        begin.draw(BaseTools.getInstance().batch);
+        exit.draw(BaseTools.getInstance().batch);
+        BaseTools.getInstance().batch.end();
     }
 
     @Override
     public void resize(int width, int height) {
-        BaseTool.getInstance().uiViewport.update(width, height,true);
+        BaseTools.getInstance().uiViewport.update(width, height,true);
     }
 
     @Override

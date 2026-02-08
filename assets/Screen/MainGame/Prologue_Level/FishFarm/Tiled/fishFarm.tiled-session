@@ -1,0 +1,74 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "background.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "../Tiled-packed/backgound.tsx": {
+            "scaleInDock": 1
+        },
+        "../Tiled-packed/background.tmx": {
+            "scale": 0.0833740234375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 18932.755490483163,
+                "y": 7646.266471449488
+            }
+        },
+        "../Tiled-packed/water.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/out/backgound.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/out/background.tmx": {
+            "scale": 0.05810546875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 23225.008403361346,
+                "y": 9964.638655462184
+            }
+        },
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/out/water.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "backgound.tsx": {
+            "scaleInDock": 4,
+            "scaleInEditor": 5.5
+        },
+        "background.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 813,
+                "y": 311
+            }
+        },
+        "water.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.imagePath": "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/Tiled/picture",
+    "map.height": 400,
+    "map.lastUsedFormat": "tmx",
+    "map.renderOrder": "2",
+    "map.width": 1000,
+    "openFiles": [
+        "background.tmx"
+    ],
+    "project": "fishFarm.tiled-project",
+    "recentFiles": [
+        "background.tmx",
+        "../Tiled-packed/background.tmx",
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/out/background.tmx",
+        "backgound.tsx",
+        "water.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx"
+}
