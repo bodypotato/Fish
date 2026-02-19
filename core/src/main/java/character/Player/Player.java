@@ -12,8 +12,7 @@ public class Player implements ICharacter {
     //初始大小和位置
     private static final float PLAYER_WIDTH = BaseTools.getInstance().gameViewport.getWorldWidth()/5;
     private static final float PLAYER_HEIGHT = BaseTools.getInstance().gameViewport.getWorldHeight()/5;
-    private static final float INIT_X = BaseTools.getInstance().gameViewport.getWorldWidth()/2;
-    private static final float INIT_Y = BaseTools.getInstance().gameViewport.getWorldHeight()/2;
+
 
     //属性
     private Sprite playerSprite;
@@ -32,8 +31,9 @@ public class Player implements ICharacter {
         playerAnimation = new PlayerAnimation();
         playerSprite = new Sprite(playerAnimation.rightAni.getKeyFrame(0));
         initProperty();
-        initSize(PLAYER_WIDTH,PLAYER_HEIGHT);
-        initPosition(INIT_X,INIT_Y);
+        //初始化Sprite属性
+        setSpriteSize(PLAYER_WIDTH,PLAYER_HEIGHT);
+
     }
 
     @Override
@@ -42,20 +42,8 @@ public class Player implements ICharacter {
         weight = 1f;
         length = 1f;
         p = weight/length;
-        speed = 1000f;
+        speed = 100f;
         position = new Vector2();
-    }
-
-    @Override
-    public void initSize(float width, float height) {
-        playerSprite.setSize(width, height);
-    }
-
-    @Override
-    public void initPosition(float x, float y) {
-        position.set(x, y);
-        playerSprite.setCenter(position.x, position.y);
-
     }
 
     @Override
@@ -64,9 +52,7 @@ public class Player implements ICharacter {
     }
 
     @Override
-    public void setSpritePosition(float x, float y) {
-        position.set(x, y);
-        playerSprite.setPosition(position.x, position.y);
+    public void setPosition(float x, float y) {
     }
 
     @Override

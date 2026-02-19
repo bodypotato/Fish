@@ -2,88 +2,306 @@ package com.Control.Global;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.*;
+import com.badlogic.gdx.maps.objects.*;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.ObjectMap;
 
 
+
+/**
+ * 地图管理器（单例）
+ * 职责：
+ *   1. 加载 / 卸载关卡地图，创建 MapRenderer
+ *   2. 提供对象层（Object Layer）的统一访问接口
+ *      - 按层名/对象名/自定义属性查询各类型对象
+ *      - 提取出生点、碰撞区域、触发器等常用数据
+ */
 public class MyMapManager implements Disposable {
-    // ======== 仅保留 2 个核心成员变量（无任何多余） ========
-    private TiledMap currentLevelMap;                // 当前关卡地图（创建 Renderer 必需）
-    public static OrthogonalTiledMapRenderer currentMapRenderer; // 当前地图渲染器（核心功能载体）
 
-    // ======== 单例（和你的 BaseTools 保持一致的线程安全懒汉式） ========
+    // ───────────────────────── 成员变量 ─────────────────────────
+
+    private TiledMap currentLevelMap;
+    public static OrthogonalTiledMapRenderer currentMapRenderer;
+
+    /**
+     * 缓存：层名 → 该层所有对象（避免每帧重复查找）
+     * 在 loadLevelMap / loadDirectMap 成功后由 cacheObjectLayers() 填充
+     */
+    private final ObjectMap<String, MapObjects> objectLayerCache = new ObjectMap<>();
+
+    // ───────────────────────── 单例 ─────────────────────────────
     private static volatile MyMapManager INSTANCE;
-    private MyMapManager() {} // 私有构造，禁止外部 new
+    private MyMapManager() {}
 
     public static MyMapManager getInstance() {
         if (INSTANCE == null) {
             synchronized (MyMapManager.class) {
-                if (INSTANCE == null) {
+                if (INSTANCE == null){
                     INSTANCE = new MyMapManager();
-
                 }
             }
         }
         return INSTANCE;
     }
 
-    public void init(){
+    // ───────────────────────── 加载地图 ─────────────────────────
 
-    }
-    // ======== 核心功能 1：加载关卡地图 + 创建 Renderer ========
-    /**
-     * 加载指定关卡地图，并创建对应的 MapRenderer
-     * @param levelName 关卡名（如 "level_01"）
-     * @param unitScale 渲染缩放因子（和你的瓦片尺寸匹配）
-     */
-    public void loadLevelMap(String levelName, float unitScale) {
-        // 1. 先释放上一关的地图/渲染器（避免内存泄漏）
+    public void loadLevelMap(String mapPath, float unitScale) {
         unloadCurrentLevelMap();
-
-        // 2. 拼接地图路径，复用 BaseTools 加载地图
-        String mapPath = "levels/" + levelName + "/map.tmx";
         BaseTools.getInstance().assetManagerLoad(mapPath, TiledMap.class);
         this.currentLevelMap = BaseTools.getInstance().assetManagerGet(mapPath, TiledMap.class);
+        initRenderer(unitScale, "关卡 " + mapPath);
+    }
 
-        // 3. 创建 MapRenderer（复用 BaseTools 的全局 Batch，核心功能）
-        if (currentLevelMap != null) {
-            SpriteBatch globalBatch = (SpriteBatch) BaseTools.getInstance().batch;
-            this.currentMapRenderer = new OrthogonalTiledMapRenderer(currentLevelMap, unitScale, globalBatch);
-            // 关联你的 GameCamera（渲染视角对齐）
-            this.currentMapRenderer.setView(BaseTools.getInstance().gameCamera.getCamera());
-            Gdx.app.log("MyMapManager", "关卡 " + levelName + " 地图渲染器创建成功");
-        } else {
-            Gdx.app.error("MyMapManager", "关卡 " + levelName + " 地图加载失败，无法创建渲染器");
+
+    /** 创建 Renderer 并缓存所有对象层（内部公共逻辑） */
+    private void initRenderer(float unitScale, String logTag) {
+        if (currentLevelMap == null) {
+            Gdx.app.error("MyMapManager", logTag + " 地图为 null，无法创建渲染器");
+            return;
+        }
+        SpriteBatch globalBatch = (SpriteBatch) BaseTools.getInstance().batch;
+        currentMapRenderer = new OrthogonalTiledMapRenderer(currentLevelMap, unitScale, globalBatch);
+        currentMapRenderer.setView(BaseTools.getInstance().gameCamera.getCamera());
+        cacheObjectLayers();
+        Gdx.app.log("MyMapManager", logTag + " 渲染器创建成功，对象层数量：" + objectLayerCache.size);
+    }
+
+    // ───────────────────────── 对象层缓存 ────────────────────────
+
+    /** 遍历地图所有层，将对象层写入缓存 */
+    private void cacheObjectLayers() {
+        objectLayerCache.clear();
+        if (currentLevelMap == null) return;
+        for (MapLayer layer : currentLevelMap.getLayers()) {
+            // 只缓存含有 MapObjects 的层（即对象层）
+            MapObjects objects = layer.getObjects();
+            if (objects != null && objects.getCount() > 0) {
+                objectLayerCache.put(layer.getName(), objects);
+                Gdx.app.log("MyMapManager", "缓存对象层：" + layer.getName()
+                    + "（" + objects.getCount() + " 个对象）");
+            }
         }
     }
 
-    // ======== 核心功能 2：获取当前地图渲染器（供渲染逻辑调用） ========
+    // -------------------------Render----------------------------
+    public void MapRender(){
+        currentMapRenderer.setView(BaseTools.getInstance().gameCamera.getCamera());
+        currentMapRenderer.render();
+    }
+    // ───────────────────────── 对象层查询 API ────────────────────
+
+    /**
+     * 获取指定层的全部对象
+     * @param layerName Tiled 里对象层的名称
+     * @return MapObjects，若层不存在返回 null
+     */
+    public MapObjects getObjects(String layerName) {
+        return objectLayerCache.get(layerName, null);
+    }
+
+    /**
+     * 按对象名称查找单个对象（在指定层中）
+     * @param layerName 层名
+     * @param objectName 对象名
+     * @return 找到的第一个同名 MapObject，不存在返回 null
+     */
+    public MapObject getObjectByName(String layerName, String objectName) {
+        MapObjects objects = getObjects(layerName);
+        if (objects == null) return null;
+        return objects.get(objectName);
+    }
+
+    /**
+     * 按自定义属性键值对查找对象列表（在指定层中）
+     * 例如：查找所有 type="enemy" 的对象
+     * @param layerName  层名
+     * @param propKey    属性键
+     * @param propValue  期望的属性值（String 比较）
+     */
+    public Array<MapObject> getObjectsByProperty(String layerName, String propKey, String propValue) {
+        Array<MapObject> result = new Array<>();
+        MapObjects objects = getObjects(layerName);
+        if (objects == null) return result;
+        for (MapObject obj : objects) {
+            MapProperties props = obj.getProperties();
+            if (props.containsKey(propKey)) {
+                Object val = props.get(propKey);
+                if (propValue.equals(String.valueOf(val))) {
+                    result.add(obj);
+                }
+            }
+        }
+        return result;
+    }
+
+    // ───────────────────────── 常用形状提取 ──────────────────────
+
+    /**
+     * 提取指定层所有矩形对象
+     */
+    public Array<Rectangle> getRectangles(String layerName) {
+        Array<Rectangle> result = new Array<>();
+        MapObjects objects = getObjects(layerName);
+        if (objects == null) return result;
+        for (MapObject obj : objects) {
+            if (obj instanceof RectangleMapObject) {
+                result.add(((RectangleMapObject) obj).getRectangle());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 提取指定层所有多边形对象
+     */
+    public Array<Polygon> getPolygons(String layerName) {
+        Array<Polygon> result = new Array<>();
+        MapObjects objects = getObjects(layerName);
+        if (objects == null) return result;
+        for (MapObject obj : objects) {
+            if (obj instanceof PolygonMapObject) {
+                result.add(((PolygonMapObject) obj).getPolygon());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 提取指定层所有折线对象
+     */
+    public Array<Polyline> getPolylines(String layerName) {
+        Array<Polyline> result = new Array<>();
+        MapObjects objects = getObjects(layerName);
+        if (objects == null) return result;
+        for (MapObject obj : objects) {
+            if (obj instanceof PolylineMapObject) {
+                result.add(((PolylineMapObject) obj).getPolyline());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 提取指定层所有圆形对象
+     */
+    public Array<Circle> getCircles(String layerName) {
+        Array<Circle> result = new Array<>();
+        MapObjects objects = getObjects(layerName);
+        if (objects == null) return result;
+        for (MapObject obj : objects) {
+            if (obj instanceof CircleMapObject) {
+                result.add(((CircleMapObject) obj).getCircle());
+            }
+        }
+        return result;
+    }
+
+    // ───────────────────────── 常用场景 API ──────────────────────
+
+    /**
+     * 获取出生点坐标（Point 对象）
+     * 约定：Tiled 里用一个"点"对象，层名随意，对象名为 spawnPointName
+     *
+     * 使用示例：
+     *   Vector2 spawn = MyMapManager.getInstance().getSpawnPoint("Objects", "PlayerSpawn");
+     *   if (spawn != null) player.setPosition(spawn.x, spawn.y);
+     */
+    public Vector2 getSpawnPoint(String layerName, String spawnPointName) {
+        MapObject obj = getObjectByName(layerName, spawnPointName);
+        if (obj == null) {
+            Gdx.app.log("MyMapManager", "未找到出生点：" + spawnPointName);
+            return null;
+        }
+
+        MapProperties props = obj.getProperties();
+        // Tiled 点对象的坐标存储的所有属性
+        float x = props.get("x", 0f, Float.class);
+        float y = props.get("y", 0f, Float.class);
+        return new Vector2(x, y);
+    }
+
+    /**
+     * 批量获取某个属性标记为触发器的矩形区域
+     * 约定：在 Tiled 对象层中给矩形加自定义属性 trigger=true
+     *
+     * 使用示例：
+     *   Array<Rectangle> triggers = MyMapManager.getInstance().getTriggerRects("Triggers");
+     */
+    public Array<Rectangle> getTriggerRects(String layerName) {
+        Array<Rectangle> result = new Array<>();
+        MapObjects objects = getObjects(layerName);
+        if (objects == null) return result;
+        for (MapObject obj : objects) {
+            if (obj instanceof RectangleMapObject) {
+                MapProperties props = obj.getProperties();
+                Boolean isTrigger = props.get("trigger", false, Boolean.class);
+                if (Boolean.TRUE.equals(isTrigger)) {
+                    result.add(((RectangleMapObject) obj).getRectangle());
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 判断某个点是否落在指定层的任意矩形对象内（常用于触发区域检测）
+     *
+     * 使用示例：
+     *   if (MyMapManager.getInstance().isPointInAnyRect("Triggers", player.x, player.y)) { ... }
+     */
+    public boolean isPointInAnyRect(String layerName, float worldX, float worldY) {
+        for (Rectangle rect : getRectangles(layerName)) {
+            if (rect.contains(worldX, worldY)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * 获取点所在的矩形对象（返回第一个命中的，可用于触发器区分）
+     */
+    public MapObject getObjectAtPoint(String layerName, float worldX, float worldY) {
+        MapObjects objects = getObjects(layerName);
+        if (objects == null) return null;
+        for (MapObject obj : objects) {
+            if (obj instanceof RectangleMapObject) {
+                if (((RectangleMapObject) obj).getRectangle().contains(worldX, worldY)) return obj;
+            } else if (obj instanceof CircleMapObject) {
+                if (((CircleMapObject) obj).getCircle().contains(worldX, worldY)) return obj;
+            }
+        }
+        return null;
+    }
+
+    // ───────────────────────── Renderer 相关 ─────────────────────
+
     public OrthogonalTiledMapRenderer getCurrentMapRenderer() {
         return currentMapRenderer;
     }
 
-    // ======== 核心功能 3：释放当前关卡地图/渲染器 ========
+    public TiledMap getCurrentLevelMap() {
+        return currentLevelMap;
+    }
+
+    // ───────────────────────── 释放资源 ─────────────────────────
+
     public void unloadCurrentLevelMap() {
-        // 释放渲染器
         if (currentMapRenderer != null) {
             currentMapRenderer.dispose();
             currentMapRenderer = null;
         }
-//        // 释放地图 + 同步卸载 AssetManager 中的资源
-//        if (currentLevelMap != null) {
-//            currentLevelMap.dispose();
-//            String mapPath = "levels/" + BaseTools.getInstance().gameTime + "/map.tmx"; // 简化：实际可传关卡名，此处仅示例
-//            BaseTools.getInstance().assetManager.unload(mapPath);
-//            currentLevelMap = null;
-//            Gdx.app.log("MyMapManager", "当前关卡地图/渲染器已释放");
-//        }
+        objectLayerCache.clear();
+        currentLevelMap = null;
     }
 
-    // ======== 游戏退出时释放所有资源 ========
     @Override
     public void dispose() {
         unloadCurrentLevelMap();
-        INSTANCE = null; // 清空单例
+        INSTANCE = null;
     }
 }

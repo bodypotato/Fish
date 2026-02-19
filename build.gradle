@@ -70,3 +70,26 @@ subprojects {
 }
 
 eclipse.project.name = 'Fish' + '-parent'
+
+// 自动化打包地图的任务
+task packMaps {
+  group = 'map tools'
+  description = '打包Tiled地图文件'
+  doLast {
+    println "开始打包地图..."
+
+    def inputDir = "assets-raw/TMX/maps"
+    def outputDir = "assets/maps"
+
+    // 删除输出文件夹的旧文件
+    delete fileTree(outputDir)
+
+    exec {
+      commandLine 'java', '-jar',
+        'C:/Users/15797/Desktop/libgdx/libgdx-tiledmappacker-runnable-1.12.1.0.jar',
+        inputDir, outputDir, '-v'
+    }
+
+    println "打包完成！"
+  }
+}

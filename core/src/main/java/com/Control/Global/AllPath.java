@@ -8,5 +8,5 @@ public class AllPath {
     public static final String START_BACKGROUND = "Screen/Start/background.png";
 
     //FishFarm
-    public static final String FISH_FARM_Background = "Screen/MainGame/Prologue_Level/FishFarm/Tiled-packed/background.tmx";
+    public static final String FISH_FARM_Background = "maps/fishFarm.tmx";
 }

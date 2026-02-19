@@ -1,0 +1,170 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "FishFarm/fishFarm.tmx",
+    "expandedProjectPaths": [
+        ".",
+        "FishFarm"
+    ],
+    "fileStates": {
+        "": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "#Tmp": {
+            "scaleInDock": 1
+        },
+        "#ground": {
+            "scaleInEditor": 1
+        },
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/fishFarm.tmx": {
+            "scale": 0.4314162234042553,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 1619.0860753641057,
+                "y": 644.3893041535023
+            }
+        },
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/fishFarm.tmx#Object": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/fishFarm.tmx#ground": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/fishFarm.tmx#sky": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/fishFarm.tmx#sun": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/fishFarm.tmx#water": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/maps/map.tmx": {
+            "scale": 0.2723710317460317,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 1778.8235294117649,
+                "y": 1130.8104170460756
+            }
+        },
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/maps/map.tmx#Object": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/maps/map.tmx#ground": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/maps/map.tmx#sky": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/maps/map.tmx#sun": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/maps/map.tmx#water": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/output/fishFarm.tmx": {
+            "scale": 0.4314162234042553,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 1493.916929952994,
+                "y": 992.0813747399245
+            }
+        },
+        "C:/Users/15797/Desktop/output/fishFarm.tmx#Object": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/output/fishFarm.tmx#ground": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/output/fishFarm.tmx#sky": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/output/fishFarm.tmx#sun": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/15797/Desktop/output/fishFarm.tmx#water": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/test/test.tmx": {
+            "expandedGroupLayers": [
+                4
+            ],
+            "scale": 1,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 1026.5,
+                "y": 752.5
+            }
+        },
+        "C:/Users/15797/Desktop/test/test.tmx#ground": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/test/test.tmx#test": {
+            "scaleInDock": 1
+        },
+        "C:/Users/15797/Desktop/test/未命名.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 862,
+                "y": 683.3333333333333
+            }
+        },
+        "C:/Users/15797/Desktop/test/未命名.tmx#test": {
+            "scaleInDock": 1
+        },
+        "FishFarm/fishFarm.tmx": {
+            "expandedGroupLayers": [
+                10,
+                8
+            ],
+            "scale": 0.5,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 1009,
+                "y": 765
+            }
+        },
+        "FishFarm/fishFarm.tmx#Object": {
+            "scaleInDock": 0.75,
+            "scaleInEditor": 1
+        },
+        "FishFarm/fishFarm.tmx#ground": {
+            "scaleInDock": 0.5,
+            "scaleInEditor": 1
+        },
+        "FishFarm/fishFarm.tmx#sky": {
+            "scaleInDock": 1
+        },
+        "FishFarm/fishFarm.tmx#sun": {
+            "scaleInDock": 1
+        },
+        "FishFarm/fishFarm.tmx#water": {
+            "scaleInDock": 0.25
+        }
+    },
+    "last.imagePath": "C:/Users/15797/Desktop/png",
+    "map.height": 47,
+    "map.lastUsedFormat": "tmx",
+    "map.renderOrder": "2",
+    "map.width": 63,
+    "openFiles": [
+        "FishFarm/fishFarm.tmx",
+        "C:/Users/15797/Desktop/test/test.tmx"
+    ],
+    "project": "map.tiled-project",
+    "property.type": "float",
+    "recentFiles": [
+        "C:/Users/15797/Desktop/test/test.tmx",
+        "FishFarm/fishFarm.tmx",
+        "C:/Users/15797/Desktop/test/未命名.tmx",
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/fishFarm.tmx",
+        "C:/Users/15797/Desktop/output/fishFarm.tmx",
+        "C:/Users/15797/Desktop/Fish/assets/Screen/MainGame/Prologue_Level/FishFarm/maps/map.tmx"
+    ],
+    "tileset.embedInMap": true
+}

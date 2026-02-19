@@ -26,7 +26,6 @@ import save.Manager.PlayerHandler;
 
 public class FishFarm implements Screen, My_GUI {
     final Control control;
-    TiledMap map;
     Player player;
     public FishFarm(Control control) {
         this.control = control;
@@ -37,14 +36,13 @@ public class FishFarm implements Screen, My_GUI {
         loadAssets();
         initUI();
         player = new Player();
+        player.setPosition(MyMapManager.getInstance().getSpawnPoint("player","player_spawn"));
         loadData();
     }
 
     @Override
     public void loadAssets() {
-        BaseTools.getInstance().assetManagerLoad(AllPath.FISH_FARM_Background, TiledMap.class);
-        map = BaseTools.getInstance().assetManagerGet(AllPath.FISH_FARM_Background, TiledMap.class);
-        MyMapManager.currentMapRenderer = new OrthogonalTiledMapRenderer(map,1f,BaseTools.getInstance().batch);
+        MyMapManager.getInstance().loadLevelMap(AllPath.FISH_FARM_Background,1f);
     }
 
     @Override
@@ -85,8 +83,9 @@ public class FishFarm implements Screen, My_GUI {
     @Override
     public void draw() {
         ScreenUtils.clear(Color.BLACK);
-        MyMapManager.currentMapRenderer.setView(BaseTools.getInstance().gameCamera.getCamera());
-        MyMapManager.currentMapRenderer.render();
+        //render
+        MyMapManager.getInstance().MapRender();
+
         BaseTools.getInstance().gameViewport.apply();
         BaseTools.getInstance().batch.setProjectionMatrix(BaseTools.getInstance().gameCamera.getCamera().combined);
         BaseTools.getInstance().batch.begin();
